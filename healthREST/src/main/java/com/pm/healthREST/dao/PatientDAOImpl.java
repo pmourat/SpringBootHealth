@@ -34,5 +34,18 @@ public class PatientDAOImpl implements PatientDAO {
 		
 	return thePatient;
 	}
+	
+	@Override
+	@Transactional
+	public void save(Patient thePatient) {
+		
+		Session currentSession = entityManager.unwrap(Session.class);
+		currentSession.saveOrUpdate(thePatient);
+	
+	
+	}
+	
+	
+	
 
 }
