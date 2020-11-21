@@ -1,9 +1,11 @@
 package com.pm.healthREST.rest;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,22 +18,36 @@ import com.pm.healthREST.entity.Patient;
 @RequestMapping("/api")
 public class PatientRestController {
 	
-	private PatientDAO patientDAO;
 	
-	//constructor injection
+	
+	
+	private PatientDAO patientDAO;
+
+
+
 	@Autowired
-	public PatientRestController(PatientDAO thePatientDAO) {
+	public PatientRestController(PatientDAO thePatientDAO/*, Patient thePatient */) {
 		
 		patientDAO = thePatientDAO;
-	}
-
-	@GetMapping("/patients/{id}")
-	public Patient getPatient(@PathVariable int id) {
-	 Patient patient = patientDAO.getPatient(id);
-	 
-	 return patient;
+	//	patient = thePatient;
+		
 		
 	}
+	
+
+	@GetMapping("/patients/{id}")
+	public Optional<Patient> getPatient(@PathVariable int id ) {
+	 Optional<Patient> patient = patientDAO.findById(id);
+	 return patient;
+		}
+		
+	
+	
+	
+	
+	
+	
+	/*
 	
 	@PostMapping("/patients")
 	public Patient registerPatient(@RequestBody Patient thePatient) {
@@ -43,6 +59,7 @@ public class PatientRestController {
 		return thePatient;
 	}
 	
+	*/
 	
 	@PutMapping("/patients")
 	public Patient updatePatient(@RequestBody Patient thePatient) {
