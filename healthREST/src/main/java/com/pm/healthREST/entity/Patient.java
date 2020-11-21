@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="patient")
-public class Patient {
+public class Patient   {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -22,6 +22,9 @@ public class Patient {
 	@Column(name="last_name")
 	private String lastName;
 	
+	@Column(name="username")
+	private String username;
+	
 	@Column(name="email")
 	private String email;
 	
@@ -32,13 +35,16 @@ public class Patient {
 		super();
 	}
 
-	public Patient(String firstName, String lastName, String email, String password) {
+	public Patient(String firstName, String lastName, String username, String email, String password) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.username = username;
 		this.email = email;
 		this.password = password;
 	}
+
+
 
 	public int getId() {
 		return id;
@@ -63,6 +69,14 @@ public class Patient {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 	public String getEmail() {
 		return email;
@@ -82,7 +96,7 @@ public class Patient {
 
 	@Override
 	public String toString() {
-		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
+		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", email=" + email + "]";
 	}
 	
 	
