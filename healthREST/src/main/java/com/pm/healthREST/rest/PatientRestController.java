@@ -1,9 +1,10 @@
 package com.pm.healthREST.rest;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,27 +20,43 @@ import com.pm.healthREST.entity.Patient;
 public class PatientRestController {
 	
 	
+	@Autowired
+	private PasswordEncoder bcryptEncoder;
 	
-	
+	@Autowired
 	private PatientDAO patientDAO;
-
+	
 
 
 	@Autowired
-	public PatientRestController(PatientDAO thePatientDAO/*, Patient thePatient */) {
+	public PatientRestController(PatientDAO thePatientDAO ) {
 		
 		patientDAO = thePatientDAO;
-	//	patient = thePatient;
 		
 		
 	}
 	
-
 	@GetMapping("/patients/{id}")
-	public Optional<Patient> getPatient(@PathVariable int id ) {
-	 Optional<Patient> patient = patientDAO.findById(id);
-	 return patient;
-		}
+	public Optional<Patient> getPatient(@PathVariable int id, Principal principal, Patient thePatient ) throws Exception {
+	
+	Optional<Patient> patient = patientDAO.findById(id);
+	 // Check if patient access his own data or not
+	 String myPatientsName = patient.get().getUsername();
+	 String x =principal.getName();
+	 if (x.equals(myPatientsName)) {
+		 return patient;
+
+	 }
+	
+	else {
+		 
+ throw new Exception("Not current users data");
+	 
+	}
+	 
+	 }
+
+		
 		
 	
 	
@@ -59,15 +76,47 @@ public class PatientRestController {
 		return thePatient;
 	}
 	
+	
+	Optional<Patient> patient = patientDAO.findById(id);
+	 // Check if patient access his own data or not
+	 String myPatientsName = patient.get().getUsername();
+	 String x =principal.getName();
+	 if (x.equals(myPatientsName)) {
+		 return patient;
+
+	 }
+	
+	else {
+		 
+ throw new Exception("Not current users data");
+	 
+	}
+	
 	*/
 	
-	@PutMapping("/patients")
-	public Patient updatePatient(@RequestBody Patient thePatient) {
+	@PutMapping("/patients/{id}")
+	public Patient updatePatient(@RequestBody Patient thePatient, @PathVariable int id, Principal principal) throws Exception {
+		Optional<Patient> patient = patientDAO.findById(id);
+		 // Check if patient access his own data or not
+		 String myPatientsName = patient.get().getUsername();
+		 String x =principal.getName();
+		 if (x.equals(myPatientsName)) {
 		
+		thePatient.setId(id);
+		thePatient.setPassword(bcryptEncoder.encode(thePatient.getPassword()));
+
 		patientDAO.save(thePatient);
 		
 		return thePatient;
 	}
+
 	
+	else {
+		 
+ throw new Exception("Not current users data");
+	 
+	}
+		 
 	
+	}	
 }
