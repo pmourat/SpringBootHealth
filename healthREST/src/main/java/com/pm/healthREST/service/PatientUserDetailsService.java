@@ -38,6 +38,7 @@ public class PatientUserDetailsService implements UserDetailsService {
 		newUser.setFirstName(user.getFirstName());
 		newUser.setLastName(user.getLastName());
 		newUser.setEmail(user.getEmail());
+		newUser.setFlag(user.getFlag());
 		return userDao.save(newUser);
 	}
 }
