@@ -1,7 +1,6 @@
 package com.pm.healthREST.entity;
 
 //import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,10 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.CreationTimestamp;
 
 
 @Entity
@@ -32,10 +28,9 @@ public class Temperature {
 	private double temperature;
 
 	
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
+	
 	@Column(name = "time")
-	private Date time;
+	private String time;
 	
 	//private LocalDateTime time;
 	
@@ -46,7 +41,7 @@ public class Temperature {
 		super();
 	}
 
-	public Temperature(int patientId, double temperature, Date time, int feverSessionId) {
+	public Temperature(int patientId, double temperature, String time, int feverSessionId) {
 		super();
 		this.patientId = patientId;
 		this.temperature = temperature;
@@ -55,7 +50,7 @@ public class Temperature {
 	}
 
 	//constructor without fever session id
-	public Temperature(int patientId, double temperature, Date time) {
+	public Temperature(int patientId, double temperature, String time) {
 		super();
 		this.patientId = patientId;
 		this.temperature = temperature;
@@ -86,11 +81,11 @@ public class Temperature {
 		this.temperature = temperature;
 	}
 
-	public Date getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 
@@ -106,6 +101,11 @@ public class Temperature {
 	public String toString() {
 		return "Temperature [id=" + id + ", patientId=" + patientId + ", temperature=" + temperature + ", time=" + time
 				+ ", feverSessionId=" + feverSessionId + "]";
+	}
+
+	public void setFeverSessionIdNull(Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
