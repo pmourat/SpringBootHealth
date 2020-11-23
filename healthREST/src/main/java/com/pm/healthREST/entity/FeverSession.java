@@ -1,6 +1,5 @@
 package com.pm.healthREST.entity;
 
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,10 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name="fever_session")
@@ -28,21 +24,19 @@ public class FeverSession {
 	@Column(name="patient_id")
 	private int patientId;
 	
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "start_time")
-	private Date startTime;
 	
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "start_time")
+	private String startTime;
+	
+	
 	@Column(name = "stop_time")
-	private Date stopTime;
+	private String stopTime;
 
 	public FeverSession() {
 		super();
 	}
 
-	public FeverSession(int feverSessionId, int patientId, Date startTime, Date stopTime) {
+	public FeverSession(int feverSessionId, int patientId, String startTime, String stopTime) {
 		super();
 		this.feverSessionId = feverSessionId;
 		this.patientId = patientId;
@@ -74,19 +68,19 @@ public class FeverSession {
 		this.patientId = patientId;
 	}
 
-	public Date getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	public Date getStopTime() {
+	public String getStopTime() {
 		return stopTime;
 	}
 
-	public void setStopTime(Date stopTime) {
+	public void setStopTime(String stopTime) {
 		this.stopTime = stopTime;
 	}
 
