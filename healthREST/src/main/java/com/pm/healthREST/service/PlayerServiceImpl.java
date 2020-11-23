@@ -24,16 +24,9 @@ import com.pm.healthREST.entity.Temperature;
 public class PlayerServiceImpl implements PlayerService {
 
 	
-	@Autowired
 	private PasswordEncoder bcryptEncoder;
-	
-	@Autowired
 	private PatientDAO patientDAO;
-	
-	@Autowired
 	private TemperatureDAO temperatureDAO;
-	
-	@Autowired
 	private FeverSessionDAO feverSessionDAO;
 	
 	//field injection
@@ -54,60 +47,75 @@ public class PlayerServiceImpl implements PlayerService {
 	@Override
 	@Transactional
 	public Temperature saveTemperature(@RequestBody Temperature theTemperature, @PathVariable String username, Principal principal) throws Exception {
-		Patient patient = patientDAO.findByUsername(username);
-		 // Check if patient access his own data or not
-		 String myPatientsName = patient.getUsername();
-		 String x =principal.getName();
+		 	  Patient patient = patientDAO.findByUsername(username);
+		 	  if (patient==null) {
+		 		  throw new Exception("User doesn't exist");
+		 					}
+		
+		 	  // Check if patient access his own data or not
+		 	  String myPatientsName = patient.getUsername();
+		 	  String x =principal.getName();
 		 
-		 if (x.equals(myPatientsName)) {
+		 
+		  	 if (!(x.equals(myPatientsName))){
+
+				 throw new Exception("Not current users data");
+				 	 
+				 }
 			 
-			 if (theTemperature.getTemperature()<42 && theTemperature.getTemperature()>35)
-			 {
+		  	 if (!(theTemperature.getTemperature()<42 && theTemperature.getTemperature()>35))
+		  		{
+				 
+				 throw new Exception("Not valid data");
+		  		}
+		  
+		  
 			 theTemperature.setPatientId(patient.getId());
 			 String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 			 theTemperature.setTime(timeStamp);
-
 			 FeverSession fv = new FeverSession();
 			 
 			 //if it's not the first insertion
-			 if ((feverSessionDAO.existsById(1))) {
+			 
+			 if(!(feverSessionDAO.findLastInsertion(patient.getId()).isEmpty())) {
 			 
 				 List<FeverSession> s= feverSessionDAO.findLastInsertion(patient.getId());
 				// Find last insertion for current patient id in table feverSession 
 				 fv =(FeverSession) s.get(s.size() - 1);
 			 }
+			 
+			 //already in fever
 			 if (patient.getFlag()&& theTemperature.getTemperature()>=37.0) {
 			 theTemperature.setFeverSessionId(fv.getFeverSessionId());
 			 }
 			 
+			 //start new fever session
 			 if (!(patient.getFlag()) && theTemperature.getTemperature()>=38.0) {
 				 FeverSession newSession = new FeverSession();
 
-
+				 // if it's the patient's first fever session
 				 if (!(feverSessionDAO.existsById(1))) {
-				fv.setFeverSessionId(1);
-				theTemperature.setFeverSessionId((fv.getFeverSessionId()));		
-				newSession.setFeverSessionId(fv.getFeverSessionId());
-
-			}
-			else
-			{
-				
-
-				theTemperature.setFeverSessionId((fv.getFeverSessionId())+1);	
-				newSession.setFeverSessionId((fv.getFeverSessionId())+1);
-
-			}
+					 fv.setFeverSessionId(1);
+					 theTemperature.setFeverSessionId((fv.getFeverSessionId()));		
+					 newSession.setFeverSessionId(fv.getFeverSessionId());
+								
+				 	}
+				 else
+				 	{
+					 //get currents fever Session id
+					 theTemperature.setFeverSessionId((fv.getFeverSessionId())+1);	
+					 newSession.setFeverSessionId((fv.getFeverSessionId())+1);
+				 	}
+				 //save to database
 				newSession.setPatientId(patient.getId());
 				newSession.setStartTime(theTemperature.getTime()); 
 				patient.setFlag(true);
 				patientDAO.save(patient);
 				feverSessionDAO.save(newSession);
 
-
-				
+		
 			 }
-			 
+			 //Stop fever session
 			 if (patient.getFlag()&& theTemperature.getTemperature()<37.0) {
 			  theTemperature.setFeverSessionIdNull(null);
 			  fv.setStopTime(theTemperature.getTime());
@@ -119,21 +127,91 @@ public class PlayerServiceImpl implements PlayerService {
 
 		temperatureDAO.save(theTemperature);
 		return theTemperature;
+			
+	}
+	
+	
+	
+	
+	
+	@Override
+	public Patient updatePatient(Patient thePatient, int id, Principal principal) throws Exception {
+		Optional<Patient> patient = patientDAO.findById(id);
+		
+	 	if (patient==null) {
+	 		  throw new Exception("User doesn't exist");
+	 	}
+	 	  
+		 // Check if patient access his own data or not
+		 String myPatientsName = patient.get().getUsername();
+		 String x =principal.getName();
+		 if (!(x.equals(myPatientsName))) {
+			 
+			 throw new Exception("Not current users data");
+
+		 }
+		
+		 //set id to update
+		thePatient.setId(id);
+		thePatient.setPassword(bcryptEncoder.encode(thePatient.getPassword()));
+
+		patientDAO.save(thePatient);
+		
+		return thePatient;
+	}
+	
+	
+	@Override
+	public String getHealth(Patient thePatient, int id, Principal principal) throws Exception {
+		 Optional<Patient> patient = patientDAO.findById(id);
+		 
+	 	 if (patient==null) {
+	 		  throw new Exception("User doesn't exist");
+	 	 }
+		 // Check if patient access his own data or not
+		 String myPatientsName = patient.get().getUsername();
+		 String x =principal.getName();
+		 if (!(x.equals(myPatientsName))) {
+			 throw new Exception("Not current users data");
+		 }
+			 
+		 if(patient.get().getFlag()) {
+			 return "ONGOING FEVER";
+			  }
+		 else {
+			 return "HEALTHY";
 			 }
-			 else {
 				 
-				 throw new Exception("Not valid data");
-			 }
+		 }
+	
+	
+	@Override
+	public Optional<Patient> getPatient(Patient thePatient, int id, Principal principal) throws Exception {
+	
+		Optional<Patient> patient = patientDAO.findById(id);
+		
+	 	if (patient==null) {
+	 		  throw new Exception("User doesn't exist");
+	 	}
+		// Check if patient access his own data or not
+		String myPatientsName = patient.get().getUsername();
+		String x =principal.getName();
+		if (!(x.equals(myPatientsName))) {
+			throw new Exception("Not current users data");
+			 
+		}
+		
+			return patient;
+
+	    }
+			 	 
 	}
 
 	
-	else {
 		 
-throw new Exception("Not current users data");
 	 
-	}
+	
 		
-		
-		
-	}
-}
+			
+	
+
