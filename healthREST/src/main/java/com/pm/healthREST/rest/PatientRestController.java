@@ -16,6 +16,7 @@ import com.pm.healthREST.entity.Patient;
 import com.pm.healthREST.entity.Temperature;
 import com.pm.healthREST.service.PlayerService;
 
+//endpoints that need JWT token in header's request
 @RestController
 @RequestMapping("/api")
 public class PatientRestController {

@@ -37,7 +37,7 @@ public class PatientRestSecuredController {
 	@Autowired
 	private PatientUserDetailsService userDetailsService;
 
-	@RequestMapping(value = "/patient", method = RequestMethod.POST)
+	@RequestMapping(value = "/patients/jwt", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
