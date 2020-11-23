@@ -1,5 +1,6 @@
 package com.pm.healthREST.rest;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pm.healthREST.dto.PatientDTO;
+import com.pm.healthREST.entity.Patient;
 import com.pm.healthREST.jwt.JwtRequest;
 import com.pm.healthREST.jwt.JwtResponse;
 import com.pm.healthREST.jwt.JwtTokenUtil;
@@ -43,14 +44,16 @@ public class PatientRestSecuredController {
 
 		final UserDetails userDetails = userDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
-
+		
 		final String token = jwtTokenUtil.generateToken(userDetails);
-
+				
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 	
+	
+	
 	@RequestMapping(value = "/patients", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody PatientDTO user) throws Exception {
+	public ResponseEntity<?> saveUser(@RequestBody Patient user) throws Exception {
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 

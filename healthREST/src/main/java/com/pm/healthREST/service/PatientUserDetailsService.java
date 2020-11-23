@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 import com.pm.healthREST.dao.PatientDAO;
-import com.pm.healthREST.dto.PatientDTO;
 import com.pm.healthREST.entity.Patient;
 
+
+//Had to Necessarily implement UserDetailsService for authentication
 @Service
 public class PatientUserDetailsService implements UserDetailsService {
 	@Autowired
@@ -31,14 +32,14 @@ public class PatientUserDetailsService implements UserDetailsService {
 				new ArrayList<>());
 	}
 
-	public Patient save(PatientDTO user) {
+	public Patient save(Patient user) {
 		Patient newUser = new Patient();
 		newUser.setUsername(user.getUsername());
 		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 		newUser.setFirstName(user.getFirstName());
 		newUser.setLastName(user.getLastName());
 		newUser.setEmail(user.getEmail());
-		newUser.setFlag(user.getFlag());
+		newUser.setFlag(false);
 		return userDao.save(newUser);
 	}
 }

@@ -32,7 +32,6 @@ public class Temperature {
 	@Column(name = "time")
 	private String time;
 	
-	//private LocalDateTime time;
 	
 	@Column(name="fever_session_id")
 	private int feverSessionId;

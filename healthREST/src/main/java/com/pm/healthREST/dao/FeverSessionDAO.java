@@ -12,7 +12,7 @@ public interface FeverSessionDAO extends CrudRepository<FeverSession, Integer> {
 	
 	public FeverSession findByPatientId(int pid);
 	
-	
+	//custom query to help us find the last fever session id
 	@Query(value = "SELECT * FROM fever_session WHERE patient_id = :patientId ", nativeQuery = true)
     List<FeverSession> findLastInsertion(@Param("patientId") int patientId);
 
