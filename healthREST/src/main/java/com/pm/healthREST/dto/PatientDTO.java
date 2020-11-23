@@ -6,7 +6,7 @@ public class PatientDTO {
 	private String email;
 	private String firstname;
 	private String lastname;
-	
+	private boolean flag;
 
 	public String getUsername() {
 		return username;
@@ -46,6 +46,14 @@ public class PatientDTO {
 
 	public void setFirstName(String firstname) {
 		this.firstname = firstname;
+	}
+	
+	public boolean getFlag() {
+		return flag;
+	}
+	
+	public void setFlag(boolean flag) {
+		this.flag = flag;
 	}
 }
 

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name="patient")
 public class Patient   {
@@ -30,10 +31,28 @@ public class Patient   {
 	
 	@Column(name="password")
 	private String password;
+	
+	@Column(name="flag")
+	private Boolean flag;
+	
+
 
 	public Patient() {
 		super();
 	}
+
+	public Patient(String firstName, String lastName, String username, String email, String password, Boolean flag) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.flag = flag;
+	}
+
+
+	
 
 	public Patient(String firstName, String lastName, String username, String email, String password) {
 		super();
@@ -43,8 +62,6 @@ public class Patient   {
 		this.email = email;
 		this.password = password;
 	}
-
-
 
 	public int getId() {
 		return id;
@@ -92,6 +109,16 @@ public class Patient   {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	
+	
+	public Boolean getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Boolean flag) {
+		this.flag = flag;
 	}
 
 	@Override
