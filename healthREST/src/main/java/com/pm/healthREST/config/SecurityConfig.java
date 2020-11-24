@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
 		//free endpoints
-				.authorizeRequests().antMatchers("/auth/patient", "/auth/patients").permitAll().
+				.authorizeRequests().antMatchers("/auth/patients/jwt", "/auth/patients").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
