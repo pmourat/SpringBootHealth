@@ -23,8 +23,9 @@ import com.pm.healthREST.entity.Temperature;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-	
+	@Autowired
 	private PasswordEncoder bcryptEncoder;
+	
 	private PatientDAO patientDAO;
 	private TemperatureDAO temperatureDAO;
 	private FeverSessionDAO feverSessionDAO;
@@ -135,6 +136,7 @@ public class PlayerServiceImpl implements PlayerService {
 	
 	
 	@Override
+	@Transactional
 	public Patient updatePatient(Patient thePatient, int id, Principal principal) throws Exception {
 		Optional<Patient> patient = patientDAO.findById(id);
 		
@@ -153,8 +155,8 @@ public class PlayerServiceImpl implements PlayerService {
 		
 		 //set id to update
 		thePatient.setId(id);
+		thePatient.setFlag(patient.get().getFlag());
 		thePatient.setPassword(bcryptEncoder.encode(thePatient.getPassword()));
-
 		patientDAO.save(thePatient);
 		
 		return thePatient;
@@ -162,6 +164,7 @@ public class PlayerServiceImpl implements PlayerService {
 	
 	
 	@Override
+	@Transactional
 	public String getHealth(Patient thePatient, int id, Principal principal) throws Exception {
 		 Optional<Patient> patient = patientDAO.findById(id);
 		 
@@ -186,6 +189,7 @@ public class PlayerServiceImpl implements PlayerService {
 	
 	
 	@Override
+	@Transactional
 	public Optional<Patient> getPatient(Patient thePatient, int id, Principal principal) throws Exception {
 	
 		Optional<Patient> patient = patientDAO.findById(id);
