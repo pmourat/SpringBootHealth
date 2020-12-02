@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<start-class>fyp.fms.HealthRestApplication</start-class>
+		<start-class>com.pm.healthREST.HealthRestApplication</start-class>
 	</properties>
 
 	<dependencies>
